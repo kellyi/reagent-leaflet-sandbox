@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/kellyi/reagent-leaflet-sandbox.svg?branch=master)](https://travis-ci.org/kellyi/reagent-leaflet-sandbox)
+
 # reagent-leaflet-sandbox
 
 Sandbox for trying out ClojureScript, Reagent & Leaflet.
