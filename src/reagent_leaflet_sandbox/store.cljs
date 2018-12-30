@@ -17,9 +17,8 @@
 (defn log-state
   [logger atom prev next]
   (do
-    (cljs.pprint/pprint logger)
-    (cljs.pprint/pprint atom)
-    (cljs.pprint/pprint (str prev " -> " next))))
+    (.log js/console logger)
+    (.log js/console atom)))
 
 (def logger
   (when ^boolean js/goog.DEBUG

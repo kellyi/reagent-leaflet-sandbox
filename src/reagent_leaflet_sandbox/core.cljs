@@ -8,9 +8,13 @@
    [reagent-leaflet-sandbox.actions :as actions]
    [reagent-leaflet-sandbox.views :as views]))
 
+(defn mount-root
+  []
+  (r/render [views/main] (.getElementById js/document "root")))
+
 (defn init! []
   (rfe/start!
    (rf/router views/routes {:data {:coercion rsc/coercion}})
    actions/update-route-match
    {:use-fragment ^boolean js/goog.DEBUG})
-  (r/render [views/main] (.getElementById js/document "root")))
+  (mount-root))

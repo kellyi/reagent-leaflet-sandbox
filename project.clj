@@ -41,10 +41,11 @@
                          :source-map true
                          :optimizations :none
                          :externs ["externs.js"]
-                         :pretty-print  true}
+                         :pretty-print  true
+                         :preloads [devtools.preload]
+                         :external-config {:devtools/config {:features-to-install :all}}}
                         :figwheel
-                        {:on-jsload "reagent-leaflet-sandbox.core/mount-root"
-                         :open-urls ["http://localhost:3449/index.html"]}}
+                        {:on-jsload "reagent-leaflet-sandbox.core/mount-root"}}
                        :release
                        {:source-paths ["src" "env/prod/cljs"]
                         :compiler
