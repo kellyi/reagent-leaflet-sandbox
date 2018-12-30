@@ -49,6 +49,7 @@
                          :output-dir "public/js/release"
                          :asset-path   "js/out"
                          :optimizations :advanced
+                         :closure-defines {"goog.DEBUG" false}
                          :externs ["externs.js"]
                          :pretty-print false}}}}
 
