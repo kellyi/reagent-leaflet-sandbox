@@ -9,9 +9,9 @@
                  [reagent "0.8.1"]
                  [alandipert/storage-atom "1.2.4"]
                  [cljs-ajax "0.8.0"]
-                 [metosin/reitit-spec "0.2.9"]
-                 [metosin/reitit-schema "0.2.9"]
-                 [metosin/reitit-frontend "0.2.9"]]
+                 [metosin/reitit-spec "0.2.10"]
+                 [metosin/reitit-schema "0.2.10"]
+                 [metosin/reitit-frontend "0.2.10"]]
 
   :plugins [[lein-cljsbuild "1.1.5"]
             [lein-figwheel "0.5.16"]
