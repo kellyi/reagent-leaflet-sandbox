@@ -4,7 +4,7 @@
             [reagent-leaflet-sandbox.constants :as constants]))
 
 (defonce unstored-app-state
-  (r/atom {:hello "world"}))
+  (r/atom {:routing {:match nil}}))
 
 (defonce stored-app-state
   (local-storage
@@ -12,6 +12,7 @@
    :stored-state))
 
 (defonce map-zoom-cursor (r/cursor stored-app-state [:zoom]))
+(defonce route-match-cursor (r/cursor unstored-app-state [:routing :match]))
 
 (defn log-state
   [logger atom prev next]
