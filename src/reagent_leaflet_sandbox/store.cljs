@@ -4,19 +4,35 @@
             [reagent-leaflet-sandbox.constants :as constants]))
 
 (defonce unstored-app-state
-  (r/atom {:routing {:match nil}}))
+  (r/atom {:routing {:match nil}
+           :auth {:fetching false
+                  :error false}
+           :data {:fetching false
+                  :error false
+                  :data nil}}))
 
 (defonce stored-app-state
   (local-storage
    (r/atom {:zoom constants/initial-basemap-zoom
             :layer-id 1
-            :year 2019})
+            :year 2019
+            :token ""
+            :url ""})
    :stored-state))
 
 (defonce map-zoom-cursor (r/cursor stored-app-state [:zoom]))
 (defonce route-match-cursor (r/cursor unstored-app-state [:routing :match]))
 (defonce layer-selection-cursor (r/cursor stored-app-state [:layer-id]))
 (defonce year-selection-cursor (r/cursor stored-app-state [:year]))
+
+(defonce auth-fetching-cursor (r/cursor unstored-app-state [:auth :fetching]))
+(defonce auth-error-cursor (r/cursor unstored-app-state [:auth :error]))
+(defonce token-cursor (r/cursor stored-app-state [:token]))
+(defonce url-cursor (r/cursor stored-app-state [:url]))
+
+(defonce data-fetching-cursor (r/cursor unstored-app-state [:data :fetching]))
+(defonce data-error-cursor (r/cursor unstored-app-state [:data :error]))
+(defonce data-data-cursor (r/cursor unstored-app-state [:data :data]))
 
 (defn log-state
   [logger atom prev next]

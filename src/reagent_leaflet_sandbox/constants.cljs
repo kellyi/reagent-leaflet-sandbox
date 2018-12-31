@@ -12,3 +12,7 @@
                  :complaints {:name "Complaints" :id 0}})
 
 (defonce years (reverse (range 2012 2020)))
+
+(defonce auth-url
+  (str "https://wt-f71cc06ebbbaeb13ae5e4354e34cb0e6-0.sandbox.auth0-extend.com/"
+       "auth"))
