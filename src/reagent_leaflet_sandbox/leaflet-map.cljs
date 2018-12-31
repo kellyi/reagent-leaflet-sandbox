@@ -10,11 +10,15 @@
 
 (defn set-leaflet-map-view
   [lat lng zoom]
-  (cond
-    (nil? lat) nil
-    (nil? lng) nil
-    (nil? @leaflet-map-ref) nil
-    :else (.setView @leaflet-map-ref #js [lat lng] zoom)))
+  (when
+   (some (comp not nil?) '(lat lng @leaflet-map-ref))
+    (.setView @leaflet-map-ref #js [lat lng] zoom)))
+
+(defn handle-zoom-end
+  []
+  (when
+   (not (nil? @leaflet-map-ref))
+    (actions/store-zoom-level-change (.getZoom @leaflet-map-ref))))
 
 (defn leaflet-map-did-mount
   []
@@ -26,11 +30,7 @@
                           (clj->js {:attribution constants/basemap-attribution
                                     :maxZoom constants/max-basemap-zoom}))
               @leaflet-map-ref)
-      (.on @leaflet-map-ref "zoomend"
-           (fn
-             []
-             (actions/store-zoom-level-change
-              (.getZoom @leaflet-map-ref)))))))
+      (.on @leaflet-map-ref "zoomend" handle-zoom-end))))
 
 (defn leaflet-map-render
   []

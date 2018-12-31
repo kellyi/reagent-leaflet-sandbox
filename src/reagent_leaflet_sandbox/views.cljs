@@ -7,27 +7,31 @@
             [reagent-leaflet-sandbox.utils :as utils]
             [reagent-leaflet-sandbox.leaflet-map :as leaflet-map]))
 
+(defn create-layer-option
+  [{id :id name :name}]
+  ^{:key id}
+  [:option {:id id :value id} name])
+
 (defn layer-selector
   []
-  (let [opts (map (fn
-                    [{id :id name :name}]
-                    ^{:key id} [:option {:id id :value id} name])
-                  (vals constants/layers))]
-    [:div.form-group.m-1
-     [:select.form-select.text-dark {:on-change actions/select-layer
-                                     :value @store/layer-selection-cursor}
-      opts]]))
+  [:div.form-group.m-1
+   [:select.form-select.text-dark {:on-change actions/select-layer
+                                   :value @store/layer-selection-cursor}
+    (doall
+     (map create-layer-option (vals constants/layers)))]])
+
+(defn create-year-option
+  [year]
+  ^{:key year}
+  [:option {:id year :value year} year])
 
 (defn year-selector
   []
-  (let [opts (map (fn
-                    [year]
-                    ^{:key year} [:option {:id year :value year} year])
-                  constants/years)]
-    [:div.form-group.m-1
-     [:select.form-select.text-dark {:on-change actions/select-year
-                                     :value @store/year-selection-cursor}
-      opts]]))
+  [:div.form-group.m-1
+   [:select.form-select.text-dark {:on-change actions/select-year
+                                   :value @store/year-selection-cursor}
+    (doall
+     (map create-year-option constants/years))]])
 
 (defn search-button
   []
@@ -70,9 +74,8 @@
       :else
       [:button.btn.btn-primary.input-group-btn.float-right.m-2.token-btn
        {:on-click actions/submit-form} "Submit"])]
-   (cond
-     @store/auth-error-cursor [:p.text-error "An error occurred"]
-     :else nil)])
+   (when
+    @store/auth-error-cursor [:p.text-error "An error occurred"])])
 
 (def routes
   [["/"
