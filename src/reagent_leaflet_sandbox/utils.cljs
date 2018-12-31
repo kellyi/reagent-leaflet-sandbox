@@ -2,4 +2,4 @@
 
 (defn get-value
   [e]
-  (-> e.-target .-value))
+  (.. e -target -value))

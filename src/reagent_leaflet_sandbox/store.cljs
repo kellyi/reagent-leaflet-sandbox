@@ -8,11 +8,15 @@
 
 (defonce stored-app-state
   (local-storage
-   (r/atom {:zoom constants/initial-basemap-zoom})
+   (r/atom {:zoom constants/initial-basemap-zoom
+            :layer-id 1
+            :year 2019})
    :stored-state))
 
 (defonce map-zoom-cursor (r/cursor stored-app-state [:zoom]))
 (defonce route-match-cursor (r/cursor unstored-app-state [:routing :match]))
+(defonce layer-selection-cursor (r/cursor stored-app-state [:layer-id]))
+(defonce year-selection-cursor (r/cursor stored-app-state [:year]))
 
 (defn log-state
   [logger atom prev next]
