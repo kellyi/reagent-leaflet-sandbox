@@ -6,7 +6,19 @@
 
 (defn store-zoom-level-change
   [zoom-level]
-  (reset! store/map-zoom-cursor zoom-level))
+  (reset! store/map-zoom-cursor (js->clj zoom-level)))
+
+(defn get-lat-lng-from-position
+  [{lat "lat" lng "lng"}]
+  {:lat lat :lng lng})
+
+(defn store-bounds-change
+  [bounds]
+  (let [clj-bounds (js->clj bounds)
+        southwest (get clj-bounds "_southWest")
+        northeast (get clj-bounds "_northEast")]
+    (reset! store/bounds-selection-cursor {:southwest (get-lat-lng-from-position southwest)
+                                           :northeast (get-lat-lng-from-position northeast)})))
 
 (defn update-route-match
   [m]

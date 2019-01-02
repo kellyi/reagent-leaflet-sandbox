@@ -5,7 +5,9 @@
             [reagent-leaflet-sandbox.actions :as actions]
             [reagent-leaflet-sandbox.store :as store]))
 
-(def leaflet-map-id "reagent-leaflet-map")
+(defonce leaflet-map-id "reagent-leaflet-map")
+(defonce zoomend "zoomend")
+(defonce moveend "moveend")
 (def leaflet-map-ref (r/atom nil))
 
 (defn set-leaflet-map-view
@@ -20,6 +22,12 @@
    (not (nil? @leaflet-map-ref))
     (actions/store-zoom-level-change (.getZoom @leaflet-map-ref))))
 
+(defn handle-move-end
+  []
+  (when
+   (not (nil? @leaflet-map-ref))
+    (actions/store-bounds-change (.getBounds @leaflet-map-ref))))
+
 (defn leaflet-map-did-mount
   []
   (let [leaflet-map-component (.map js/L leaflet-map-id)]
@@ -30,7 +38,8 @@
                           (clj->js {:attribution constants/basemap-attribution
                                     :maxZoom constants/max-basemap-zoom}))
               @leaflet-map-ref)
-      (.on @leaflet-map-ref "zoomend" handle-zoom-end))))
+      (.on @leaflet-map-ref zoomend handle-zoom-end)
+      (.on @leaflet-map-ref moveend handle-move-end))))
 
 (defn leaflet-map-render
   []
