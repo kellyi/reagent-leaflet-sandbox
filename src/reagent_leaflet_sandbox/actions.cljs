@@ -1,5 +1,5 @@
 (ns reagent-leaflet-sandbox.actions
-  (:require [ajax.core :refer [POST]]
+  (:require [ajax.core :refer [GET POST]]
             [reagent-leaflet-sandbox.constants :as constants]
             [reagent-leaflet-sandbox.store :as store]
             [reagent-leaflet-sandbox.utils :as utils]))
@@ -17,8 +17,9 @@
   (let [clj-bounds (js->clj bounds)
         southwest (get clj-bounds "_southWest")
         northeast (get clj-bounds "_northEast")]
-    (reset! store/bounds-selection-cursor {:southwest (get-lat-lng-from-position southwest)
-                                           :northeast (get-lat-lng-from-position northeast)})))
+    (reset! store/bounds-selection-cursor
+            {:southwest (get-lat-lng-from-position southwest)
+             :northeast (get-lat-lng-from-position northeast)})))
 
 (defn update-route-match
   [m]
@@ -55,9 +56,8 @@
 (defn complete-submit-form
   [data]
   (let [url (get data "url")]
-    (do
-      (reset! store/auth-fetching-cursor false)
-      (reset! store/url-cursor url))))
+    (reset! store/auth-fetching-cursor false)
+    (reset! store/url-cursor url)))
 
 (defn submit-form
   []
@@ -78,13 +78,20 @@
     (reset! store/data-error-cursor true)))
 
 (defn complete-fetch-data
-  []
+  [data]
   (do
-    (reset! store/data-fetching-cursor false)))
+    (reset! store/data-fetching-cursor false)
+    (reset! store/data-data-cursor data)))
 
 (defn fetch-data
   []
-  (do
+  (let [query-string (utils/create-query-string
+                      {:bbox @store/bounds-selection-cursor
+                       :year @store/year-selection-cursor
+                       :layer @store/layer-selection-cursor})]
     (reset! store/data-error-cursor false)
     (reset! store/data-fetching-cursor true)
-    (complete-fetch-data)))
+    (GET (str @store/url-cursor query-string)
+      {:response-format :json
+       :error-handler fail-fetch-data
+       :handler complete-fetch-data})))

@@ -39,7 +39,8 @@
                                     :maxZoom constants/max-basemap-zoom}))
               @leaflet-map-ref)
       (.on @leaflet-map-ref zoomend handle-zoom-end)
-      (.on @leaflet-map-ref moveend handle-move-end))))
+      (.on @leaflet-map-ref moveend handle-move-end)
+      (actions/store-bounds-change (.getBounds @leaflet-map-ref)))))
 
 (defn leaflet-map-render
   []

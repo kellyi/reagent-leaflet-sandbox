@@ -43,7 +43,6 @@
     (.log js/console atom)))
 
 (def logger
-  (when ^boolean js/goog.DEBUG
-    (do
-      (add-watch stored-app-state :stored-state-logger log-state)
-      (add-watch unstored-app-state :unstored-state-logger log-state))))
+  (when js/goog.DEBUG
+    (add-watch stored-app-state :stored-state-logger log-state)
+    (add-watch unstored-app-state :unstored-state-logger log-state)))
