@@ -29,13 +29,15 @@
   [e]
   (as-> e event
     (utils/get-value event)
-    (reset! store/layer-selection-cursor event)))
+    (reset! store/layer-selection-cursor event)
+    (reset! store/data-data-cursor nil)))
 
 (defn select-year
   [e]
   (as-> e event
     (utils/get-value event)
-    (reset! store/year-selection-cursor event)))
+    (reset! store/year-selection-cursor event)
+    (reset! store/data-data-cursor nil)))
 
 (defn handle-update-token
   [e]
@@ -44,6 +46,7 @@
       (utils/get-value event)
       (reset! store/token-cursor event))
     (reset! store/url-cursor "")
+    (reset! store/data-data-cursor nil)
     (reset! store/auth-error-cursor false)))
 
 (defn fail-submit-form

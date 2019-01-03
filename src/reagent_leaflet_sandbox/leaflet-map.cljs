@@ -9,11 +9,12 @@
 (defonce zoomend "zoomend")
 (defonce moveend "moveend")
 (def leaflet-map-ref (r/atom nil))
+(def geojson-layer (r/atom nil))
 
 (defn set-leaflet-map-view
   [lat lng zoom]
   (when
-   (some (comp not nil?) '(lat lng @leaflet-map-ref))
+   (utils/some-are-not-nil? '(lat lng @leaflet-map-ref))
     (.setView @leaflet-map-ref #js [lat lng] zoom)))
 
 (defn handle-zoom-end
@@ -42,11 +43,63 @@
       (.on @leaflet-map-ref moveend handle-move-end)
       (actions/store-bounds-change (.getBounds @leaflet-map-ref)))))
 
+(defn maybe-remove-geojson-layer
+  []
+  (cond
+    (nil? @geojson-layer) nil
+    (nil? @leaflet-map-ref) nil
+    (not (.hasLayer @leaflet-map-ref @geojson-layer)) (reset! geojson-layer nil)
+    :else
+    (do
+      (.removeLayer @leaflet-map-ref @geojson-layer)
+      (reset! geojson-layer nil))))
+
+(defn create-circle-marker
+  [feature latlng]
+  (let [marker-options (clj->js {"radius" 8
+                                 "fillColor" "#ff7800"
+                                 "opacity" 1
+                                 "stroke" false
+                                 "fillOpacity" 0.8})]
+    (.circleMarker js/L latlng (clj->js marker-options))))
+
+(defn create-popups-for-layer
+  [feature layer]
+  (let [clj-properties (js->clj (.. feature -properties))]
+    (.bindPopup layer (str (get clj-properties "ADDRESS")))))
+
+(defn create-geojson-layer
+  [data]
+  (let [options (clj->js {"pointToLayer" create-circle-marker
+                          "onEachFeature" create-popups-for-layer})]
+    (.geoJSON js/L (clj->js data) options)))
+
+(defn maybe-add-new-geojson-layer
+  [data]
+  (when
+   (utils/some-are-not-nil? '(@leaflet-map-ref data))
+    (let [new-geojson-layer (create-geojson-layer data)]
+      (do
+        (reset! geojson-layer new-geojson-layer)
+        (.addTo @geojson-layer @leaflet-map-ref)))))
+
+(defn leaflet-map-did-update
+  [this prev-props]
+  (let [data (:data (r/props this))]
+    (do
+      (maybe-remove-geojson-layer)
+      (maybe-add-new-geojson-layer data))))
+
 (defn leaflet-map-render
   []
   [:div.map-container {:id leaflet-map-id}])
 
-(defn leaflet-map
+(defn leaflet-map-component
   []
   (r/create-class {:reagent-render leaflet-map-render
-                   :component-did-mount leaflet-map-did-mount}))
+                   :component-did-mount leaflet-map-did-mount
+                   :component-did-update leaflet-map-did-update}))
+
+(defn leaflet-map
+  []
+  [leaflet-map-component {:data @store/data-data-cursor}])
