@@ -31,7 +31,7 @@
   (str "/" layer "/" "query?where=1=1"
        "&returnGeometry=true" "&inSR=4326"
        "&f=pgeojson" "&outSR=4326"
-       "&outFields=" (get outfields layer)
+       "&outFields=" (get outfields (str layer))
        (make-esri-geom-from-bbox bbox)))
 
 (defn some-are-not-nil?

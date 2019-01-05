@@ -1,5 +1,7 @@
 (ns reagent-leaflet-sandbox.leaflet-map
   (:require [reagent.core :as r]
+            [reagent.dom.server :refer [render-to-string]]
+            [oops.core :refer [oget]]
             [reagent-leaflet-sandbox.utils :as utils]
             [reagent-leaflet-sandbox.constants :as constants]
             [reagent-leaflet-sandbox.actions :as actions]
@@ -63,10 +65,15 @@
                                  "fillOpacity" 0.8})]
     (.circleMarker js/L latlng (clj->js marker-options))))
 
+(defn create-element-for-popup
+  [feature]
+  (let [address (oget feature "properties.ADDRESS")]
+    (render-to-string [:div.reagent-leaflet-popup
+                       [:p.reagent-leaflet-popup-text address]])))
+
 (defn create-popups-for-layer
   [feature layer]
-  (let [clj-properties (js->clj (.. feature -properties))]
-    (.bindPopup layer (str (get clj-properties "ADDRESS")))))
+  (.bindPopup layer (create-element-for-popup feature)))
 
 (defn create-geojson-layer
   [data]
