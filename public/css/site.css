@@ -41,3 +41,12 @@
     display: flex;
     justify-content: center;
 }
+
+.leaflet-popup-content-wrapper {
+    background-color: transparent !important;
+    box-shadow: none !important;
+}
+
+.leaflet-popup-tip-container {
+    display: none !important;
+}

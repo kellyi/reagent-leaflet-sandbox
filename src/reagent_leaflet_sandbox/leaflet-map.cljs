@@ -1,11 +1,11 @@
 (ns reagent-leaflet-sandbox.leaflet-map
   (:require [reagent.core :as r]
             [reagent.dom.server :refer [render-to-string]]
-            [oops.core :refer [oget]]
             [reagent-leaflet-sandbox.utils :as utils]
             [reagent-leaflet-sandbox.constants :as constants]
             [reagent-leaflet-sandbox.actions :as actions]
-            [reagent-leaflet-sandbox.store :as store]))
+            [reagent-leaflet-sandbox.store :as store]
+            [reagent-leaflet-sandbox.popup-cards :as cards]))
 
 (defonce leaflet-map-id "reagent-leaflet-map")
 (defonce zoomend "zoomend")
@@ -65,11 +65,15 @@
                                  "fillOpacity" 0.8})]
     (.circleMarker js/L latlng (clj->js marker-options))))
 
+(defonce create-card-for-layer {"0" cards/create-complaint-card
+                                "1" cards/create-building-card
+                                "2" cards/create-plumbing-card})
+
 (defn create-element-for-popup
   [feature]
-  (let [address (oget feature "properties.ADDRESS")]
-    (render-to-string [:div.reagent-leaflet-popup
-                       [:p.reagent-leaflet-popup-text address]])))
+  (let [create-card-for-feature
+        (get create-card-for-layer @store/layer-selection-cursor)]
+    (render-to-string (create-card-for-feature feature))))
 
 (defn create-popups-for-layer
   [feature layer]
