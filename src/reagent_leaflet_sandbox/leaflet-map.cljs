@@ -72,7 +72,7 @@
 (defn create-element-for-popup
   [feature]
   (let [create-card-for-feature
-        (get create-card-for-layer @store/layer-selection-cursor)]
+        (get create-card-for-layer (str @store/layer-selection-cursor))]
     (render-to-string (create-card-for-feature feature))))
 
 (defn create-popups-for-layer

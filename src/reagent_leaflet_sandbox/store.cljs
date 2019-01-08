@@ -11,20 +11,20 @@
                   :error false
                   :data nil}
            :zoom constants/initial-basemap-zoom
-           :bounds nil}))
+           :bounds nil
+           :layer-id "1"
+           :token ""}))
 
 (defonce stored-app-state
   (local-storage
-   (r/atom {:layer-id 1
-            :year 2019
-            :token ""
+   (r/atom {:token ""
             :url ""})
    :stored-state))
 
 (defonce map-zoom-cursor (r/cursor unstored-app-state [:zoom]))
 (defonce route-match-cursor (r/cursor unstored-app-state [:routing :match]))
-(defonce layer-selection-cursor (r/cursor stored-app-state [:layer-id]))
-(defonce year-selection-cursor (r/cursor stored-app-state [:year]))
+(defonce layer-selection-cursor (r/cursor unstored-app-state [:layer-id]))
+(defonce year-selection-cursor (r/cursor unstored-app-state [:year]))
 (defonce bounds-selection-cursor (r/cursor unstored-app-state [:bounds]))
 
 (defonce auth-fetching-cursor (r/cursor unstored-app-state [:auth :fetching]))
