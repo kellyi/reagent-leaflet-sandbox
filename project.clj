@@ -3,6 +3,7 @@
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
+  :main ^:skip-aot build.add-hash
 
   :dependencies [[org.clojure/clojure "1.10.0"]
                  [org.clojure/clojurescript "1.10.439"]
@@ -54,12 +55,15 @@
                          :output-dir "public/js/release"
                          :asset-path   "js/out"
                          :optimizations :advanced
+                         :fingerprint true
                          :closure-defines {"goog.DEBUG" false}
                          :externs ["externs.js"]
                          :pretty-print false}}}}
 
-  :aliases {"package" ["do" "clean" ["cljsbuild" "once" "release"]]
-            "lint" ["do" ["cljfmt" "fix"] "bikeshed" "kibit"]}
+
+  :aliases {"package" ["do" "clean" ["cljsbuild" "once" "release"] "add-hash"]
+            "lint" ["do" ["cljfmt" "fix"] "bikeshed" "kibit"]
+            "add-hash" ["run"]}
 
   :profiles {:dev {:source-paths ["src" "env/dev/clj"]
                    :dependencies [[binaryage/devtools "0.9.10"]
