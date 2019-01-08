@@ -1,8 +1,5 @@
 language: clojure
 
-before_script:
-  - lein lint
-
 script:
   - lein package
 
