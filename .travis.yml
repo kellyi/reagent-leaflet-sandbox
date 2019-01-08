@@ -1,5 +1,13 @@
 language: clojure
 
-script:
+before_script:
   - lein lint
+
+script:
   - lein package
+
+deploy:
+  skip_cleanup: true
+  provider: surge
+  project: public/
+  domain: https://reagent-leaflet-sandbox.surge.sh
